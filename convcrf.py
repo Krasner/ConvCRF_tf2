@@ -87,8 +87,9 @@ class ConvCRF(Layer):
         rgb_norm = 1.0/ self.theta_beta * rgb
         pos_norm = 1.0/ self.theta_alpha * _mesh
 
-        return tf.concat([rgb_norm,pos_norm],axis=1) #(b, 5, h, w)
+        return tf.concat([pos_norm, rgb_norm],axis=1) #(b, 5, h, w)
 
+    @tf.function
     def _create_convolutional_filters(self, features):
 
         #features NCHW
@@ -134,7 +135,7 @@ class ConvCRF(Layer):
                     diff_exp,
                 )
         
-        return  tf.reshape(tf.expand_dims(gaussian_filter, 1), (bs, 1, -1, h, w))
+        return tf.reshape(tf.expand_dims(gaussian_filter, 1), (bs, 1, -1, h, w))
 
 
     def compute_gaussian(self,input,filter):
@@ -230,7 +231,7 @@ class ConvCRF(Layer):
                 w_b=tf.shape(spatial_out)[3]
                 pairwise = tf.reshape(pairwise, (bs, c, h_b, w_b))
                 pairwise = tf.transpose(pairwise,perm=(0,2,3,1))
-                pairwise = tf.image.resize(pairwise,(h,w),method='bilinear')
+                pairwise = tf.image.resize(pairwise, (h, w), method='bilinear')
                 pairwise = tf.transpose(pairwise,perm=(0,3,1,2))
             else:
                 pairwise = tf.reshape(pairwise, (bs, c, h, w))
