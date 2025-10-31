@@ -84,8 +84,8 @@ class ConvCRF(Layer):
         # rgb (b, 3, h, w)
         bs = tf.shape(rgb)[0]
         _mesh = tf.tile(tf.expand_dims(self._mesh, 0), (bs, 1, 1, 1)) #(b, 2, h, w)
-        rgb_norm = 1.0/ self.theta_alpha * rgb
-        pos_norm = 1.0/ self.theta_beta * _mesh
+        rgb_norm = 1.0/ self.theta_beta * rgb
+        pos_norm = 1.0/ self.theta_alpha * _mesh
 
         return tf.concat([rgb_norm,pos_norm],axis=1) #(b, 5, h, w)
 
