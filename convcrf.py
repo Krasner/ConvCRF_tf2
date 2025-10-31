@@ -159,13 +159,11 @@ class ConvCRF(Layer):
             padding='SAME'
         )
 
-        print(f"{input_col.shape=}")
+        # print(f"{input_col.shape=}")
         input_col = tf.reshape(input_col, (bs, -1, self.filter_size*self.filter_size, c))
         input_col = tf.transpose(input_col, (0, 3, 2, 1)) # (b, c, f*f, h*w)
         input_col = tf.reshape(input_col, (bs, c, -1, h, w))
-        #(bs,c,self.filter_size*filter_size,h,w)
-        # input_col = tf.reshape(input_col,(bs, h, w, self.filter_size*self.filter_size, c))
-        # input_col = tf.transpose(input_col,perm=[0,4,3,1,2]) #(b, c, f*f, h, w)
+        
         product = input_col * filter
         product = tf.reduce_sum(product,axis=2)
 
